@@ -156,31 +156,3 @@ const styles = StyleSheet.create({
     alignSelf:'center'
   }
 });
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   loginFields: {
-//     flex: 1,
-//     flexDirection: "column",
-//     justifyContent: 'space-around',
-//     padding: 10,
-//
-//   },
-//   loginView: {
-//     flex: 1,
-//     flexDirection: "column",
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     borderWidth: 1,
-//     padding: 20,
-//     borderColor: "#000",
-//     backgroundColor: '#999',
-//   },
-//   itemsStyle: {
-//     margin: 30,
-//   },
-// });
