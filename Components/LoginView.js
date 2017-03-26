@@ -1,0 +1,186 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
+
+import React, { Component } from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Image,
+  Dimensions,
+  TouchableHighlight,
+  ScrollView,
+  Text,
+  TextInput,
+  Alert,
+  AsyncStorage,
+  View
+} from 'react-native';
+import ManageESXI from './manageESXI';
+
+export default class LoginView extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      email:'',
+      password:'',
+      userData:'',
+      userServerKey:''
+    }
+  }
+
+  loginAction() {
+    console.log(this.props);
+    this.props.navigator.push({
+      component: ManageESXI,
+      passProps: {
+        username: "root",
+        password: "pinetree",
+        hostname: "esxi.local"
+      }
+    })
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.inputGroup}>
+          <Text style={styles.title}>EscapESXI</Text>
+          <TextInput
+              style={styles.inputStyle}
+              autoCapitalize='none'
+              autoCorrect={false}
+              onChangeText={(text) => this.setState({email: text})}
+              value={this.state.email}
+              placeholder={"Hostname or IP Address"}
+              placeholderTextColor='grey'
+          />
+          <TextInput
+              style={styles.inputStyle}
+              autoCapitalize='none'
+              autoCorrect={false}
+              onChangeText={(text) => this.setState({email: text})}
+              value={this.state.email}
+              placeholder={"Email Address"}
+              placeholderTextColor='grey'
+          />
+          <TextInput
+            style={styles.inputStyle}
+            autoCapitalize='none'
+            onChangeText={(text) => this.setState({password: text})}
+            value={this.state.password}
+            secureTextEntry={true}
+            placeholder={"Password"}
+            placeholderTextColor='grey'
+          />
+        </View>
+        <View style={styles.bottomGroup}>
+          <TouchableHighlight style={styles.buttonBg} onPress={() => this.loginAction()}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableHighlight>
+        </View>
+      </View>);
+  }
+}
+
+var {width,height} = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection:'column',
+  },
+  title: {
+    fontSize: 64,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color:'#FFF',
+  },
+  bottomGroup:{
+    flex:2,
+    flexDirection:'column',
+  },
+  inputGroup:{
+    flex:3,
+    flexDirection:'column',
+    justifyContent: 'flex-end',
+  },
+  inputStyle:{
+    height: 40,
+    width:width - 40,
+    marginBottom: 10,
+    borderColor: 'grey',
+    borderWidth: 0.5,
+    backgroundColor:'#FFFFFF',
+    textAlign:'center',
+    color:'grey'
+  },
+  loginGroup:{
+    flex:1,
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  loginGroupAccount: {
+    fontSize: 16,
+    color:'#000000',
+    textAlign:'right',
+  },
+  loginGroupBtnLabel: {
+    fontSize: 16,
+    margin: 20,
+    color:'rgb(0,179,227)',
+    textAlign:'left',
+    flex:1
+  },
+  buttonBg:{
+    backgroundColor:'rgb(0,181,80)',
+    margin:20,
+    width:220,
+    justifyContent:'center',
+    alignItems:'center',
+    alignSelf:'center',
+    height:50,
+    borderRadius:5
+  },
+  buttonText:{
+    fontSize:16,
+    justifyContent:'center',
+    color:'white',
+    alignSelf:'center'
+  }
+});
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   loginFields: {
+//     flex: 1,
+//     flexDirection: "column",
+//     justifyContent: 'space-around',
+//     padding: 10,
+//
+//   },
+//   loginView: {
+//     flex: 1,
+//     flexDirection: "column",
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     borderWidth: 1,
+//     padding: 20,
+//     borderColor: "#000",
+//     backgroundColor: '#999',
+//   },
+//   itemsStyle: {
+//     margin: 30,
+//   },
+// });
