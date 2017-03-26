@@ -24,8 +24,9 @@ export default class LoginView extends Component {
   constructor(props){
     super(props);
     this.state = {
-      email:'',
+      username:'',
       password:'',
+      hostname: '',
       userData:'',
       userServerKey:''
     }
@@ -36,9 +37,9 @@ export default class LoginView extends Component {
     this.props.navigator.push({
       component: ManageESXI,
       passProps: {
-        username: "root",
-        password: "pinetree",
-        hostname: "esxi.local"
+        username: this.state.username,
+        password: this.state.password,
+        hostname: this.state.hostname
       }
     })
   }
@@ -52,8 +53,8 @@ export default class LoginView extends Component {
               style={styles.inputStyle}
               autoCapitalize='none'
               autoCorrect={false}
-              onChangeText={(text) => this.setState({email: text})}
-              value={this.state.email}
+              onChangeText={(text) => this.setState({hostname: text})}
+              value={this.state.hostname}
               placeholder={"Hostname or IP Address"}
               placeholderTextColor='grey'
           />
@@ -61,9 +62,9 @@ export default class LoginView extends Component {
               style={styles.inputStyle}
               autoCapitalize='none'
               autoCorrect={false}
-              onChangeText={(text) => this.setState({email: text})}
-              value={this.state.email}
-              placeholder={"Email Address"}
+              onChangeText={(text) => this.setState({username: text})}
+              value={this.state.username}
+              placeholder={"Username"}
               placeholderTextColor='grey'
           />
           <TextInput

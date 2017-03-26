@@ -10,6 +10,10 @@ export default class ManageESXI extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   sendCMD() {
     this.props.navigator.push({
       component: Home,
