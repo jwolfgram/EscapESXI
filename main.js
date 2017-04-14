@@ -73,9 +73,11 @@ const styles = StyleSheet.create({
   },
   navigationView: {
     flex: 1,
+    paddingTop: 60,
     backgroundColor: 'rgb(29, 97, 179)',
   },
   navbarView: {
+    height: 60,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   title: {
