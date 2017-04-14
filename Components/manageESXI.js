@@ -10,15 +10,15 @@ export default class ManageESXI extends Component {
       sshConfig: {user: 'root', host: '192.168.2.7', password: 'pinetree'}
     };
     this.openVmActionSheet = this.openVmActionSheet.bind(this);
-    this.listAllVMs = this.listAllVMs.bind(this);
+    this.getAllVMs = this.getAllVMs.bind(this);
   }
 
   componentDidMount() {
     console.log(this.props);
-    SSH.execute(this.state.sshConfig, 'ls /').then(
-      result => console.log(result),
-      error =>  console.log('Error:', error)
-    );
+    // SSH.execute(this.state.sshConfig, 'ls /').then(
+    //   result => console.log(result),
+    //   error =>  console.log('Error:', error)
+    // );
   }
 
   sendCMD() {
@@ -42,36 +42,44 @@ export default class ManageESXI extends Component {
   // }
   openVmActionSheet(worldID) {
     console.log(worldID);
+    // SSH.execute(this.state.sshConfig, 'ls /').then(
+    //   result => console.log(result),
+    //   error =>  console.log('Error:', error)
+    // );
   }
 
-  listAllVMs() {
+  getAllVMs() {
     SSH.execute(this.state.sshConfig, 'vim-cmd vmsvc/getallvms').then((result) => {
       result.splice(0,1);
-      console.log('get all vms');
-      console.log(result);
+      // console.log('get all vms');
+      // console.log(result);
       let VMPromiseArray = [];
       result.map((VMdata) => {
-        console.log(VMdata.substr(0,VMdata.indexOf(' ')))
-        console.log(VMdata.substr(VMdata.indexOf(' ')+1).match(/.*?(?=\[|$)/i)[0]) //Everything after the worldID (used to start / stop VMs)
+        // console.log(VMdata.substr(0,VMdata.indexOf(' ')))
+        // console.log(VMdata.substr(VMdata.indexOf(' ')+1).match(/.*?(?=\[|$)/i)[0]) //Everything after the worldID (used to start / stop VMs)
         VMPromiseArray.push(SSH.execute(this.state.sshConfig, 'vim-cmd vmsvc/power.getstate ' + VMdata.substr(0,VMdata.indexOf(' '))));
       })
       Promise.all(VMPromiseArray).then(pwrStateArr => {
         let VMDataArray = [];
-        console.log(pwrStateArr);
+        let VMStateArr = [];
         for (let i = 0; i < pwrStateArr.length; i++) {
-          let worldID = result[i].substr(0,result[i].indexOf(' '))
+          let worldID = result[i].substr(0,result[i].indexOf(' '));
+          let vmName = result[i].substr(result[i].indexOf(' ')+1).match(/.*?(?=\[|$)/i)[0].trim();
           if (pwrStateArr[i][1].includes('on')) {
-            VMDataArray.push(<TouchableHighlight onClick={(worldID) => {this.openVmActionSheet(worldID)}} key={i} style={styles.vmSelectionBtnOn}>
+            VMStateArr.push({name: vmName, isVMOn: true})
+            VMDataArray.push(<TouchableHighlight onPress={() => this.openVmActionSheet(worldID)} key={i} style={styles.vmSelectionBtnOn}>
                               <Text>{result[i].substr(result[i].indexOf(' ')+1).match(/.*?(?=\[|$)/i)[0]} - {pwrStateArr[i][1]}</Text>
                             </TouchableHighlight>)
           } else {
-            VMDataArray.push(<TouchableHighlight onClick={(worldID) => {this.openVmActionSheet(worldID)}} key={i} style={styles.vmSelectionBtnOff}>
+            VMStateArr.push({responseStr: vmName, isVMOn: false})
+            VMDataArray.push(<TouchableHighlight onPress={() => this.openVmActionSheet(worldID)} key={i} style={styles.vmSelectionBtnOff}>
                   <Text>{result[i].substr(result[i].indexOf(' ')+1).match(/.*?(?=\[|$)/i)[0]} - {pwrStateArr[i][1]}</Text>
                 </TouchableHighlight>)
           }
 
         }
-        this.setState({response: VMDataArray})
+        console.log(VMStateArr);
+        this.setState({response: VMDataArray, VMStateArray: VMStateArr})
       });
     }).catch((err) => {
       console.log(err);
@@ -85,7 +93,7 @@ export default class ManageESXI extends Component {
         <ScrollView style={styles.scrollView}>
           {this.state.response}
         </ScrollView>
-        <TouchableHighlight style={styles.buttonBg} onPress={() => this.listAllVMs()}>
+        <TouchableHighlight style={styles.buttonBg} onPress={() => this.getAllVMs()}>
           <Text style={styles.buttonText}>{this.state.response ? "Refresh VMs Status" : "List All VMs"}</Text>
         </TouchableHighlight>
       </View>
@@ -117,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     margin:20,
     width: "90%",
-    justifyContent:'flex-end',
+    justifyContent:'center',
     alignItems:'center',
     alignSelf:'center',
     height:50,
