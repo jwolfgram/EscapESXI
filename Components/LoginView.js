@@ -24,9 +24,6 @@ export default class LoginView extends Component {
   constructor(props){
     super(props);
     this.state = {
-      username:'',
-      password:'',
-      hostname: '',
       userData:'',
       userServerKey:''
     }
@@ -34,14 +31,19 @@ export default class LoginView extends Component {
 
   loginAction() {
     console.log(this.props);
-    this.props.navigator.push({
-      component: ManageESXI,
-      passProps: {
-        username: this.state.username,
-        password: this.state.password,
-        hostname: this.state.hostname
-      }
-    })
+    if (this.state.hasOwnProperty('username') && this.state.hasOwnProperty('password') && this.state.hasOwnProperty('hostname')) {
+      this.props.navigator.push({
+        component: ManageESXI,
+          passProps: {
+            user: this.state.username,
+            password: this.state.password,
+            host: this.state.hostname
+          }
+        })
+    } else {
+      console.log('needs the shit bitch');
+    }
+
   }
 
   render() {
