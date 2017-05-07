@@ -4,13 +4,14 @@
  * @flow
  */
 
-import React, { Component, createElement, Dimensions } from 'react';
+import React, { Component, createElement } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   Navigator,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions
 } from 'react-native';
 import LoginView from './Components/LoginView.js'
 
@@ -112,8 +113,7 @@ const styles = StyleSheet.create({
     flexDirection:'column',
   },
   componentContainer: {
-    height: '100%',
-    paddingTop: 60,
+    height: Dimensions.get('window').height - 60,
   },
   navbarView: {
     flexDirection:'row',
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 255, 0, 0.4)',
   },
   titleView: {
-    flex: .33,
+    flex: .8,
     alignItems:'center',
     alignSelf:'center',
   },
@@ -147,12 +147,12 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   rightNavButton: {
-    flex: .33,
+    flex: .1,
     alignItems:'center',
     alignSelf:'center',
   },
   leftNavButton: {
-    flex: .33,
+    flex: .1,
     alignItems:'center',
     alignSelf:'center',
   },
