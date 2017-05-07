@@ -136,7 +136,7 @@ ClientAliveInterval 200' > /etc/ssh/sshd_config;`;
   }
 }
 
-var {width,height} = Dimensions.get('window');
+var {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {

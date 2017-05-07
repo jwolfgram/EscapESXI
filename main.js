@@ -95,6 +95,8 @@ export default class EscapESXI extends Component {
   }
 
   render() {
+    console.log(Dimensions);
+
     return (
       <View style={styles.container}>
       {this.renderNavigator()}
@@ -113,7 +115,11 @@ const styles = StyleSheet.create({
     flexDirection:'column',
   },
   componentContainer: {
-    height: Dimensions.get('window').height - 60,
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    bottom: 0
   },
   navbarView: {
     flexDirection:'row',
