@@ -4,13 +4,14 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React, { Component, createElement } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   Navigator,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions
 } from 'react-native';
 import LoginView from './Components/LoginView.js'
 
@@ -31,35 +32,77 @@ var NavigationBarRouteMapper = {
       <TouchableHighlight
          onPress={ () => route.onPress() }>
          <Text style={ styles.rightNavButtonText }>
-              { route.rightText || 'Right Button' }
+              { route.rightText || '' }
          </Text>
        </TouchableHighlight>)
   },
   Title(route, navigator, index, navState) {
-    return <Text style={ styles.title }>{route.component.name || 'EscapESXI'}</Text>
+    return <Text style={ styles.title }>{route.name || 'EscapESXI'}</Text>
   }
 };
 
 export default class EscapESXI extends Component {
+  constructor(props) {
+    super(props);
 
-  renderScene(route, navigator) {
-    console.log(route.component);
-     return React.createElement(route.component, { ...this.props, ...route.passProps, route, navigator } )
+    this.state = {
+      views: [
+        {Component: LoginView,
+          props: {},
+          name: "Login"
+        }
+      ]
+    }
+    this.renderScene = this.renderScene.bind(this);
+    this.renderNavigator = this.renderNavigator.bind(this);
+    this.pushView = this.pushView.bind(this);
+    this.goBack = this.goBack.bind(this);
+  }
+
+  componentDidMount() {
+
+  }
+  pushView(view, props, name) {
+    let pushThis = this.state.views.concat({Component: view, props: props, name: name});
+    this.setState({views: pushThis});
+  }
+
+  goBack() {
+    console.log('delteing view');
+    console.log(this.state);
+    deleteView = this.state.views;
+    deleteView.pop()
+    console.log(deleteView);
+    this.setState({views: deleteView})
+  }
+
+  renderNavigator() {
+    let currentView = this.state.views[this.state.views.length - 1]
+    return (<View style={styles.navbarView}>
+              <TouchableHighlight style={styles.leftNavButton} onPress={() => this.goBack()}><Text style={styles.leftNavButtonText}>{'<'}</Text></TouchableHighlight>
+                <View  style={styles.titleView}>
+                  <Text style={styles.title}>{currentView.name}</Text>
+                </View>
+              <TouchableHighlight style={styles.rightNavButton} onPress={() => console.log('shiot')}><Text style={styles.rightNavButtonText}></Text></TouchableHighlight>
+            </View>)
+  }
+
+  renderScene() {
+    console.log(this.state.views);
+    let currentView = this.state.views[this.state.views.length - 1]
+    console.log(currentView);
+    return createElement(currentView.Component, {pushView: this.pushView, props: currentView.props})
   }
 
   render() {
+    console.log(Dimensions);
+
     return (
       <View style={styles.container}>
-      <Navigator
-        style={styles.navigationView}
-        initialRoute={{ component: LoginView }}
-        renderScene={ this.renderScene }
-        routeMapper={ NavigationBarRouteMapper }
-        navigationBar={ <Navigator.NavigationBar
-                          style={ styles.navbarView }
-                          routeMapper={ NavigationBarRouteMapper } />
-                      }
-      />
+      {this.renderNavigator()}
+      <View style={styles.componentContainer}>
+        {this.renderScene()}
+      </View>
       </View>
     );
   }
@@ -68,20 +111,35 @@ export default class EscapESXI extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
-    flexDirection:'row',
-  },
-  navigationView: {
-    flex: 1,
     backgroundColor: 'rgb(29, 97, 179)',
+    flexDirection:'column',
+  },
+  componentContainer: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    bottom: 0
   },
   navbarView: {
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    flexDirection:'row',
+    height: 60,
+    justifyContent:'space-around',
+    alignItems:'center',
+    alignSelf:'center',
+    width: '100%',
+    backgroundColor: 'rgba(0, 255, 0, 0.4)',
+  },
+  titleView: {
+    flex: .8,
+    alignItems:'center',
+    alignSelf:'center',
   },
   title: {
     color: '#FFF',
     fontSize: 24,
     fontWeight: 'bold',
+
   },
   rightNavButtonText: {
     color: '#FFF',
@@ -94,14 +152,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginLeft: 20,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  rightNavButton: {
+    flex: .1,
+    alignItems:'center',
+    alignSelf:'center',
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  leftNavButton: {
+    flex: .1,
+    alignItems:'center',
+    alignSelf:'center',
   },
 });
