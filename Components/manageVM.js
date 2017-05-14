@@ -112,20 +112,22 @@ export default class ManageVM extends Component {
         )
       } else {
         if (this.state.poweredOn == true) {
-          return (<View style={styles.actionsView}>
-                    <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.softPowerOffVM(this.props.props.vmSessionID)}>
-                      <Text style={styles.buttonText}>Soft Power Off</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.powerOffVM(this.props.props.vmSessionID)}>
-                      <Text style={styles.buttonText}>Force Power Off</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.suspendVM(this.props.props.vmSessionID)}>
-                      <Text style={styles.buttonText}>Suspend VM</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.getPowerState()}>
-                      <Text style={styles.buttonText}>Refresh VM's Status</Text>
-                    </TouchableHighlight>
-                  </View>)
+          return (<ScrollView style={styles.scrollView}>
+                    <View style={styles.actionsView}>
+                      <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.softPowerOffVM(this.props.props.vmSessionID)}>
+                        <Text style={styles.buttonText}>Soft Power Off</Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.powerOffVM(this.props.props.vmSessionID)}>
+                        <Text style={styles.buttonText}>Force Power Off</Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.suspendVM(this.props.props.vmSessionID)}>
+                        <Text style={styles.buttonText}>Suspend VM</Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.getPowerState()}>
+                        <Text style={styles.buttonText}>Refresh VM's Status</Text>
+                      </TouchableHighlight>
+                    </View>
+                  </ScrollView>)
         }
       }
     }
@@ -149,13 +151,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
+  },
+  scrollView: {
+    flex: .5,
+    width: "100%"
   },
   actionsView: {
-    flex: .5,
-    width: "90%",
+    margin: 5,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   vmScreenShotView: {
     flex: .5,
@@ -165,6 +170,7 @@ const styles = StyleSheet.create({
   },
   vmDetailsView: {
     flex: .5,
+    paddingBottom: 20,
     width: "90%",
     justifyContent: 'center',
     alignItems: 'center',
