@@ -117,7 +117,16 @@ const styles = StyleSheet.create({
     alignItems:'center',
     alignSelf:'center',
     width: '100%',
-    backgroundColor: 'rgba(0, 255, 0, 0.4)',
+    paddingBottom: 2,
+    zIndex: 100,
+    backgroundColor: 'rgb(128,128,128)',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 2
+    },
+    shadowRadius: 1,
+    shadowOpacity: .8
   },
   titleView: {
     flex: .8,
