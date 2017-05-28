@@ -46,10 +46,10 @@ export default class ManageVM extends Component {
       for (let i = 0; i < result.length; i++) {
         if (result[i].includes('ipAddress = "')) {
           let ipAddress = result[i].split('"')[1];
-          ipAddressArr.push(<Text key={i} style={styles.buttonText}>{ipAddress}</Text>)
+          ipAddressArr.push(<Text key={i}>{ipAddress}</Text>)
         }
       }
-      this.setState({ipAddressEl: ipAddressArr.splice(1, ipAddressArr.length - 1)})
+      this.setState({ipAddressEl: <View style={styles.card}>{ipAddressArr}</View>})
     })
   }
 
@@ -131,9 +131,7 @@ export default class ManageVM extends Component {
                         <Text style={styles.buttonText}>Refresh VM's Status</Text>
                       </TouchableHighlight>
                     </View>
-                    <View style={styles.card}>
-                      {this.state.ipAddressEl || <Text>Loading...</Text>}
-                    </View>
+                    {this.state.ipAddressEl || <View style={styles.card}><Text>Loading...</Text></View>}
                   </ScrollView>)
         }
       }
