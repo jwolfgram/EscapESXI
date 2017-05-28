@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet,  TouchableHighlight, ScrollView } from 'react-native';
+import { View, Text, StyleSheet,  TouchableHighlight, ScrollView, Dimensions } from 'react-native';
 import SSH from 'react-native-ssh';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ManageVM from './manageVM.js';
@@ -80,7 +80,7 @@ export default class ManageESXI extends Component {
             VMDataArray.push(<TouchableHighlight key={i} onPress={() => this.openVMDetails(vmName, vmSessionID)}>
                               <View style={[styles.card, styles.vmSelectionBtn]}>
                                 <Text style={styles.vmName}>{vmName}</Text>
-                                <TouchableHighlight style={styles.vmPowerBtnOn} onPress={() => this.powerOffVM(vmSessionID)}>
+                                <TouchableHighlight style={[styles.btn, styles.vmPowerBtnOn]} onPress={() => this.powerOffVM(vmSessionID)}>
                                 <Text style={styles.whiteColorText}>Power Off</Text>
                                 </TouchableHighlight>
                               </View>
@@ -90,7 +90,7 @@ export default class ManageESXI extends Component {
             VMDataArray.push(<TouchableHighlight key={i} onPress={() => this.openVMDetails(vmName, vmSessionID)}>
                               <View style={[styles.card, styles.vmSelectionBtn]}>
                                 <Text style={styles.vmName}>{vmName}</Text>
-                                <TouchableHighlight style={styles.vmPowerBtnOff} onPress={() => this.powerOnVM(vmSessionID)}>
+                                <TouchableHighlight style={[styles.btn, styles.vmPowerBtnOff]} onPress={() => this.powerOnVM(vmSessionID)}>
                                   <Text style={styles.whiteColorText}>Power On</Text>
                                 </TouchableHighlight>
                               </View>
@@ -126,7 +126,7 @@ export default class ManageESXI extends Component {
         <ScrollView style={styles.scrollView}>
           {this.vmList()}
         </ScrollView>
-        <TouchableHighlight style={styles.buttonBg} onPress={() => this.getAllVMs()}>
+        <TouchableHighlight style={[styles.btn, styles.buttonBg]} onPress={() => this.getAllVMs()}>
           <Text style={styles.buttonText}>{this.state.response ? "Refresh VMs Status" : "List All VMs"}</Text>
         </TouchableHighlight>
       </View>
@@ -134,6 +134,7 @@ export default class ManageESXI extends Component {
   }
 }
 
+const window = Dimensions.get('window');
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
@@ -142,9 +143,11 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   card: {
-    padding: 3,
+    padding: 8,
     margin: 5,
-    justifyContent:'center',
+    width: '100%',
+    backgroundColor: '#fff',
+    justifyContent:'space-around',
     alignItems:'center',
     alignSelf:'center',
     borderRadius: 2,
@@ -156,52 +159,56 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     shadowOpacity: .8
   },
+  btn: {
+    padding: 3,
+    margin: 5,
+    justifyContent:'center',
+    alignItems:'center',
+    alignSelf:'center',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 1,
+    shadowOpacity: .8
+  },
   scrollView: {
-    height: "90%",
+    height: window.height - 120,
   },
   buttonText: {
     color: 'white',
+    fontWeight: 'bold',
   },
   buttonBg:{
     backgroundColor:'rgb(0,181,80)',
     margin:20,
     width: "90%",
     height: "5%",
-    borderRadius:5
   },
   vmName: {
-    width: '60%',
-    fontFamily: 'Al Nile',
-    color: 'white',
+    fontFamily: 'System',
+    fontWeight: 'bold',
   },
   whiteColorText: {
     color: 'white',
   },
   vmSelectionBtn: {
-    backgroundColor:'#1E90FF',
+    justifyContent:'space-between',
     margin:20,
     width: "90%",
     flexDirection: 'row',
-    justifyContent:'space-around',
-    alignItems:'center',
-    alignSelf:'center',
     height:50,
   },
   vmPowerBtnOn: {
     backgroundColor: '#32CD32',
-    borderRadius:5,
     height:40,
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
+    width: 80
   },
   vmPowerBtnOff: {
     backgroundColor: '#FF4500',
-    borderRadius:5,
     height:40,
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
+    width: 80
   },
   tabbar: {
     backgroundColor:'white',

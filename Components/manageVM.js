@@ -113,19 +113,22 @@ export default class ManageVM extends Component {
       } else {
         if (this.state.poweredOn == true) {
           return (<ScrollView style={styles.scrollView}>
-                    <View style={styles.actionsView}>
-                      <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.softPowerOffVM(this.props.props.vmSessionID)}>
+                    <View style={[styles.card, styles.actionsView]}>
+                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.softPowerOffVM(this.props.props.vmSessionID)}>
                         <Text style={styles.buttonText}>Soft Power Off</Text>
                       </TouchableHighlight>
-                      <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.powerOffVM(this.props.props.vmSessionID)}>
+                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.powerOffVM(this.props.props.vmSessionID)}>
                         <Text style={styles.buttonText}>Force Power Off</Text>
                       </TouchableHighlight>
-                      <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.suspendVM(this.props.props.vmSessionID)}>
+                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.suspendVM(this.props.props.vmSessionID)}>
                         <Text style={styles.buttonText}>Suspend VM</Text>
                       </TouchableHighlight>
-                      <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.getPowerState()}>
+                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.getPowerState()}>
                         <Text style={styles.buttonText}>Refresh VM's Status</Text>
                       </TouchableHighlight>
+                    </View>
+                    <View style={styles.card}>
+                      {this.state.ipAddressEl || <Text>Loading...</Text>}
                     </View>
                   </ScrollView>)
         }
@@ -138,8 +141,7 @@ export default class ManageVM extends Component {
       <View style={styles.Container}>
         {this.powerStateOptions()}
         <View style={styles.vmDetailsView}>
-          <Image source={{uri: this.state.vmScreenShotData}} style={styles.vmScreenShotView} />
-          {this.state.ipAddressEl || <Text>Loading...</Text>}
+
         </View>
       </View>
     )
@@ -154,8 +156,39 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   scrollView: {
-    flex: .5,
-    width: "100%"
+    width: "100%",
+    padding: 10
+  },
+  card: {
+    padding: 8,
+    margin: 5,
+    width: '100%',
+    backgroundColor: '#fff',
+    justifyContent:'space-around',
+    alignItems:'center',
+    alignSelf:'center',
+    borderRadius: 2,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 1,
+    shadowOpacity: .8
+  },
+  btn: {
+    padding: 3,
+    margin: 5,
+    justifyContent:'center',
+    alignItems:'center',
+    alignSelf:'center',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 1,
+    shadowOpacity: .8
   },
   actionsView: {
     margin: 5,
@@ -187,14 +220,7 @@ const styles = StyleSheet.create({
   },
   vmSelectionBtn: {
     backgroundColor:'#1E90FF',
-    margin:20,
-    width: "90%",
-    flexDirection: 'row',
-    justifyContent:'space-around',
-    alignItems:'center',
-    alignSelf:'center',
     height:50,
-    borderRadius:5
   },
   title: {
     color: '#FFF',

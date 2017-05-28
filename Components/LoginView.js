@@ -133,7 +133,7 @@ ClientAliveInterval 200' > /etc/ssh/sshd_config;`;
           />
         </View>
         <View style={styles.bottomGroup}>
-          <TouchableHighlight style={styles.buttonBg} onPress={() => this.loginAction()}>
+          <TouchableHighlight style={[styles.card, styles.buttonBg]} onPress={() => this.loginAction()}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableHighlight>
         </View>
@@ -163,8 +163,23 @@ const styles = StyleSheet.create({
     flex:2,
     flexDirection:'column',
   },
+  btn: {
+    padding: 3,
+    margin: 5,
+    justifyContent:'center',
+    alignItems:'center',
+    alignSelf:'center',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 1,
+    shadowOpacity: .8
+  },
   inputGroup:{
     flex:3,
+    paddingBottom: 20,
     flexDirection:'column',
     justifyContent: 'flex-end',
   },
@@ -198,18 +213,17 @@ const styles = StyleSheet.create({
   },
   buttonBg:{
     backgroundColor:'rgb(0,181,80)',
-    margin:20,
     width:220,
     justifyContent:'center',
     alignItems:'center',
     alignSelf:'center',
     height:50,
-    borderRadius:5
   },
   buttonText:{
     fontSize:16,
     justifyContent:'center',
     color:'white',
-    alignSelf:'center'
+    alignSelf:'center',
+    fontWeight: 'bold',
   }
 });
