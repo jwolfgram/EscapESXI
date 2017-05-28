@@ -40,7 +40,8 @@ export default class EscapESXI extends Component {
       currentView.state = this.refs.current.state
       console.log(currentView)
     }
-    let pushThis = stateViews.concat({Component: createElement(view, {}), props: props, name: name});
+
+    let pushThis = stateViews.concat({Component: view, props: props, name: name});
     this.setState({views: pushThis});
   }
 
@@ -66,7 +67,7 @@ export default class EscapESXI extends Component {
     let currentView = this.state.views[this.state.views.length - 1]
     let element = currentView.Component
     //SET INIT STATE HERE
-    let elementFuncNames = Object.getOwnPropertyNames(element.type.prototype);
+    let elementFuncNames = Object.getOwnPropertyNames(element.prototype);
     let newObject = { //We can add custom callback functions here such as goBack() for navigation
                       getInitialState: function() {
                         console.log(this)
@@ -76,7 +77,7 @@ export default class EscapESXI extends Component {
     for (let obj of elementFuncNames) {
       if (obj == 'constructor') { //TODO
       } else {
-        newObject[obj] = element.type.prototype[obj]
+        newObject[obj] = element.prototype[obj]
       }
     }
     let classInstance = createClass(newObject)
