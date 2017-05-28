@@ -78,7 +78,7 @@ export default class ManageESXI extends Component {
           if (pwrStateArr[i][1].includes('on')) {
             VMState.isVMOn = true;
             VMDataArray.push(<TouchableHighlight key={i} onPress={() => this.openVMDetails(vmName, vmSessionID)}>
-                              <View key={i} style={styles.vmSelectionBtn}>
+                              <View style={[styles.card, styles.vmSelectionBtn]}>
                                 <Text style={styles.vmName}>{vmName}</Text>
                                 <TouchableHighlight style={styles.vmPowerBtnOn} onPress={() => this.powerOffVM(vmSessionID)}>
                                 <Text style={styles.whiteColorText}>Power Off</Text>
@@ -88,7 +88,7 @@ export default class ManageESXI extends Component {
           } else {
             VMState.isVMOn = false;
             VMDataArray.push(<TouchableHighlight key={i} onPress={() => this.openVMDetails(vmName, vmSessionID)}>
-                              <View style={styles.vmSelectionBtn}>
+                              <View style={[styles.card, styles.vmSelectionBtn]}>
                                 <Text style={styles.vmName}>{vmName}</Text>
                                 <TouchableHighlight style={styles.vmPowerBtnOff} onPress={() => this.powerOnVM(vmSessionID)}>
                                   <Text style={styles.whiteColorText}>Power On</Text>
@@ -141,6 +141,21 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center'
   },
+  card: {
+    padding: 3,
+    margin: 5,
+    justifyContent:'center',
+    alignItems:'center',
+    alignSelf:'center',
+    borderRadius: 2,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 1,
+    shadowOpacity: .8
+  },
   scrollView: {
     height: "90%",
   },
@@ -151,14 +166,12 @@ const styles = StyleSheet.create({
     backgroundColor:'rgb(0,181,80)',
     margin:20,
     width: "90%",
-    justifyContent:'center',
-    alignItems:'center',
-    alignSelf:'center',
     height: "5%",
     borderRadius:5
   },
   vmName: {
     width: '60%',
+    fontFamily: 'Al Nile',
     color: 'white',
   },
   whiteColorText: {
@@ -173,7 +186,6 @@ const styles = StyleSheet.create({
     alignItems:'center',
     alignSelf:'center',
     height:50,
-    borderRadius:5
   },
   vmPowerBtnOn: {
     backgroundColor: '#32CD32',
