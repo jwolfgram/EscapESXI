@@ -4,7 +4,7 @@
  * @flow
  */
 
-import React, { Component, createElement } from 'react';
+import React, { Component, createElement, createClass } from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,14 +18,9 @@ import LoginView from './Components/LoginView.js'
 export default class EscapESXI extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      views: [
-        {Component: LoginView,
-          props: {},
-          name: "Login"
-        }
-      ]
+      views: [],
+      currentCount: 0
     }
     this.renderScene = this.renderScene.bind(this);
     this.renderNavigator = this.renderNavigator.bind(this);
@@ -33,16 +28,25 @@ export default class EscapESXI extends Component {
     this.goBack = this.goBack.bind(this);
   }
 
-  componentDidMount() {
-
+  componentWillMount() {
+    this.pushView(LoginView, {}, "Login")
   }
+
   pushView(view, props, name) {
-    let pushThis = this.state.views.concat({Component: view, props: props, name: name});
+    let stateViews = this.state.views
+    let currentView = stateViews[this.state.views.length - 1]
+
+    if (currentView && this.refs.current) {
+      currentView.state = this.refs.current.state
+      console.log(currentView)
+    }
+    let pushThis = stateViews.concat({Component: createElement(view, {}), props: props, name: name});
     this.setState({views: pushThis});
   }
 
   goBack() {
     deleteView = this.state.views;
+    console.log(deleteView)
     deleteView.pop()
     this.setState({views: deleteView})
   }
@@ -60,7 +64,24 @@ export default class EscapESXI extends Component {
 
   renderScene() {
     let currentView = this.state.views[this.state.views.length - 1]
-    return createElement(currentView.Component, {pushView: this.pushView, props: currentView.props})
+    let element = currentView.Component
+    //SET INIT STATE HERE
+    let elementFuncNames = Object.getOwnPropertyNames(element.type.prototype);
+    let newObject = { //We can add custom callback functions here such as goBack() for navigation
+                      getInitialState: function() {
+                        console.log(this)
+                        return currentView.state || {};
+                      }
+                    }
+    for (let obj of elementFuncNames) {
+      if (obj == 'constructor') { //TODO
+      } else {
+        newObject[obj] = element.type.prototype[obj]
+      }
+    }
+    let classInstance = createClass(newObject)
+    let elementInstance = createElement(classInstance, {pushView: this.pushView, props: {}})
+    return <elementInstance.type ref="current" pushView={this.pushView} {...currentView.props}/>//element
   }
 
   render() {
@@ -118,6 +139,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 24,
     marginLeft: 20,
+
   },
   rightNavButton: {
     flex: .1,

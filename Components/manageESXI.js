@@ -6,23 +6,9 @@ import ManageVM from './manageVM.js';
 
 
 export default class ManageESXI extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      sshConfig: {user: this.props.props.user, host: this.props.props.host, password: this.props.props.password},
-      // sshConfig: {user: "root", host: "192.168.3.2", password: "pinetree"},
-      response: false
-    };
-    this.getAllVMs = this.getAllVMs.bind(this);
-    this.powerOnVM = this.powerOnVM.bind(this);
-    this.powerOffVM = this.powerOffVM.bind(this);
-    this.vmList = this.vmList.bind(this);
-    this.openVMDetails = this.openVMDetails.bind(this);
-  }
-
-  componentDidMount() {
-    this.getAllVMs()
+  componentWillMount() {
+    this.setState({sshConfig: {user: this.props.user, host: this.props.host, password: this.props.password}}, () => {this.getAllVMs(!this.state.response)})
   }
 
   openVMDetails(vmName, vmSessionID) {
@@ -60,8 +46,10 @@ export default class ManageESXI extends Component {
     );
   }
 
-  getAllVMs() {
-    this.setState({response: null});
+  getAllVMs(refresh) {
+    if (refresh) {
+      this.setState({response: null});
+    }
     SSH.execute(this.state.sshConfig, 'vim-cmd vmsvc/getallvms').then((result) => {
       result.splice(0,1);
       let VMPromiseArray = [];
@@ -120,13 +108,12 @@ export default class ManageESXI extends Component {
   }
 
   render() {
-    const { page } = this.state;
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
           {this.vmList()}
         </ScrollView>
-        <TouchableHighlight style={[styles.btn, styles.buttonBg]} onPress={() => this.getAllVMs()}>
+        <TouchableHighlight style={[styles.btn, styles.buttonBg]} onPress={() => this.getAllVMs(true)}>
           <Text style={styles.buttonText}>{this.state.response ? "Refresh VMs Status" : "List All VMs"}</Text>
         </TouchableHighlight>
       </View>

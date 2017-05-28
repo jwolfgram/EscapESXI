@@ -15,15 +15,17 @@ export default class ManageVM extends Component {
     this.getPowerState = this.getPowerState.bind(this);
   }
 
-  componentDidMount() {
-    console.log(this.props.props);
-    this.getPowerState()
-    this.getVMScreenShot()
+  componentWillMount() {
+    this.setState({poweredOn: null, status: "Getting VM Status..."}, () => {
+      this.getPowerState()
+      this.getVMScreenShot()
+    })
+
   }
 
   getPowerState() {
     this.setState({poweredOn: null, status: "Getting VM Status..."});
-    SSH.execute(this.props.props.sshConfig, ' vim-cmd vmsvc/power.getstate ' + this.props.props.vmSessionID).then((result) =>{
+    SSH.execute(this.props.sshConfig, ' vim-cmd vmsvc/power.getstate ' + this.props.vmSessionID).then((result) =>{
         if (result[1] == "Powered off") {
           this.setState({poweredOn: false})
         } else {
@@ -32,14 +34,14 @@ export default class ManageVM extends Component {
           }
         }
     })
-    SSH.execute(this.props.props.sshConfig, 'esxcli vm process list').then((result) =>{
+    SSH.execute(this.props.sshConfig, 'esxcli vm process list').then((result) =>{
         for (let i = 0; i < result.length; i+=8) {
-          if (this.props.props.vmName == result[i]) {
+          if (this.props.vmName == result[i]) {
             this.setState({worldID: result[i + 1].substr(result[i + 1].indexOf(":") + 1)})
           }
         }
     })
-    SSH.execute(this.props.props.sshConfig, 'vim-cmd vmsvc/get.guest ' + this.props.props.vmSessionID).then((result) =>{
+    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/get.guest ' + this.props.vmSessionID).then((result) =>{
       let ipAddressArr = []
       for (let i = 0; i < result.length; i++) {
         if (result[i].includes('ipAddress = "')) {
@@ -53,7 +55,7 @@ export default class ManageVM extends Component {
 
   powerOffVM(vmSessionID) {
     this.setState({poweredOn: null, status: "Sending Power Off..."});
-    SSH.execute(this.props.props.sshConfig, 'vim-cmd vmsvc/power.off ' + vmSessionID).then(
+    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/power.off ' + vmSessionID).then(
       result => this.setState({poweredOn: false}),
       error =>  console.log('Error:', error)
     );
@@ -62,7 +64,7 @@ export default class ManageVM extends Component {
   softPowerOffVM(vmSessionID) {
     console.log('vim-cmd vmsvc/power.shutdown ' + vmSessionID)
     this.setState({poweredOn: null, status: "Sending Soft Power Off..."});
-    SSH.execute(this.props.props.sshConfig, 'vim-cmd vmsvc/power.shutdown ' + vmSessionID).then(
+    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/power.shutdown ' + vmSessionID).then(
       result => this.setState({poweredOn: true}),
       error =>  console.log('Error:', error)
     );
@@ -70,7 +72,7 @@ export default class ManageVM extends Component {
 
   powerOnVM(vmSessionID) {
     this.setState({poweredOn: null, status: "Sending Power On..."});
-    SSH.execute(this.props.props.sshConfig, 'vim-cmd vmsvc/power.on ' + vmSessionID).then(
+    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/power.on ' + vmSessionID).then(
       result => this.setState({poweredOn: true}),
       error =>  console.log('Error:', error)
     );
@@ -87,7 +89,7 @@ export default class ManageVM extends Component {
 
   suspendVM(vmSessionID) {
     this.setState({poweredOn: null, status: "Sending Suspend Signal..."});
-    SSH.execute(this.props.props.sshConfig, 'vim-cmd vmsvc/power.suspend ' + vmSessionID).then(
+    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/power.suspend ' + vmSessionID).then(
       result => this.setState({poweredOn: true}),
       error =>  console.log('Error:', error)
     );
@@ -102,7 +104,7 @@ export default class ManageVM extends Component {
       if (this.state.poweredOn == false) {
         return (
           <View style={styles.actionsView}>
-            <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.powerOnVM(this.props.props.vmSessionID)}>
+            <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.powerOnVM(this.props.vmSessionID)}>
               <Text style={styles.buttonText}>Power On</Text>
             </TouchableHighlight>
             <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.getPowerState()}>
@@ -114,13 +116,13 @@ export default class ManageVM extends Component {
         if (this.state.poweredOn == true) {
           return (<ScrollView style={styles.scrollView}>
                     <View style={[styles.card, styles.actionsView]}>
-                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.softPowerOffVM(this.props.props.vmSessionID)}>
+                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.softPowerOffVM(this.props.vmSessionID)}>
                         <Text style={styles.buttonText}>Soft Power Off</Text>
                       </TouchableHighlight>
-                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.powerOffVM(this.props.props.vmSessionID)}>
+                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.powerOffVM(this.props.vmSessionID)}>
                         <Text style={styles.buttonText}>Force Power Off</Text>
                       </TouchableHighlight>
-                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.suspendVM(this.props.props.vmSessionID)}>
+                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.suspendVM(this.props.vmSessionID)}>
                         <Text style={styles.buttonText}>Suspend VM</Text>
                       </TouchableHighlight>
                       <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.getPowerState()}>
