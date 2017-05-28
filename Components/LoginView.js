@@ -36,12 +36,17 @@ export default class LoginView extends Component {
 
   componentDidMount() {
     console.log(this.props);
+    AsyncStorage.multiGet(['hostname', 'username', 'password']).then((data) => {
+      console.log(data);
+      this.setState({hostname: data[0][1], username: data[1][1], password: data[2][1] })
+    })
   }
 
   loginAction() {
     this.setState({loggingIn: true});
     if (this.state.hasOwnProperty('username') && this.state.hasOwnProperty('password') && this.state.hasOwnProperty('hostname')) {
       Keyboard.dismiss()
+      AsyncStorage.multiSet([['hostname', this.state.hostname], ['username', this.state.username], ['password', this.state.password]])
       console.log(this.props);
       this.props.pushView(ManageESXI, {user: this.state.username, password: this.state.password, host: this.state.hostname}, "VMs");
     }

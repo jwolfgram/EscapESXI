@@ -15,32 +15,6 @@ import {
 } from 'react-native';
 import LoginView from './Components/LoginView.js'
 
-var NavigationBarRouteMapper = {
-  LeftButton(route, navigator, index, navState) {
-    if(index > 0) {
-      return (
-        <TouchableHighlight
-          underlayColor="transparent"
-          onPress={() => { if (index > 0) { navigator.pop() } }}>
-          <Text style={ styles.leftNavButtonText }>{'<'}</Text>
-        </TouchableHighlight>)
-    }
-    else { return null }
-  },
-  RightButton(route, navigator, index, navState) {
-    if (route.onPress) return (
-      <TouchableHighlight
-         onPress={ () => route.onPress() }>
-         <Text style={ styles.rightNavButtonText }>
-              { route.rightText || '' }
-         </Text>
-       </TouchableHighlight>)
-  },
-  Title(route, navigator, index, navState) {
-    return <Text style={ styles.title }>{route.name || 'EscapESXI'}</Text>
-  }
-};
-
 export default class EscapESXI extends Component {
   constructor(props) {
     super(props);
@@ -68,11 +42,8 @@ export default class EscapESXI extends Component {
   }
 
   goBack() {
-    console.log('delteing view');
-    console.log(this.state);
     deleteView = this.state.views;
     deleteView.pop()
-    console.log(deleteView);
     this.setState({views: deleteView})
   }
 
@@ -88,15 +59,11 @@ export default class EscapESXI extends Component {
   }
 
   renderScene() {
-    console.log(this.state.views);
     let currentView = this.state.views[this.state.views.length - 1]
-    console.log(currentView);
     return createElement(currentView.Component, {pushView: this.pushView, props: currentView.props})
   }
 
   render() {
-    console.log(Dimensions);
-
     return (
       <View style={styles.container}>
       {this.renderNavigator()}
