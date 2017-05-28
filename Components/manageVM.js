@@ -116,6 +116,8 @@ export default class ManageVM extends Component {
         if (this.state.poweredOn == true) {
           return (<ScrollView style={styles.scrollView}>
                     <View style={[styles.card, styles.actionsView]}>
+                      <Text style={styles.cardTitle}>VM Options</Text>
+                      <View style={styles.hr}/>
                       <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.softPowerOffVM(this.props.vmSessionID)}>
                         <Text style={styles.buttonText}>Soft Power Off</Text>
                       </TouchableHighlight>
@@ -178,6 +180,12 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     shadowOpacity: .8
   },
+  hr: {
+    width: '100%',
+    borderTopColor: '#666',
+    borderTopWidth: 3,
+    marginBottom: 10,
+  },
   btn: {
     padding: 3,
     margin: 5,
@@ -213,6 +221,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
   },
+  cardTitle: {
+    width: '100%',
+    color: '#666',
+    fontSize: 16,
+    padding: 5,
+    fontWeight: 'bold',
+  },
   vmName: {
     width: '60%',
     color: 'white',
@@ -222,6 +237,7 @@ const styles = StyleSheet.create({
   },
   vmSelectionBtn: {
     backgroundColor:'#1E90FF',
+    width: '100%',
     height:50,
   },
   title: {
