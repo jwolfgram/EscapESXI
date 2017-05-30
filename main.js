@@ -55,7 +55,7 @@ export default class EscapESXI extends Component {
   renderNavigator() {
     let currentView = this.state.views[this.state.views.length - 1]
     return (<View style={styles.navbarView}>
-              <TouchableHighlight style={styles.leftNavButton} onPress={() => this.goBack()}><Text style={styles.leftNavButtonText}>{'<'}</Text></TouchableHighlight>
+              { this.state.views.length > 1 ? <TouchableHighlight style={styles.leftNavButton} onPress={() => this.goBack()}><Text style={styles.leftNavButtonText}>{'<'}</Text></TouchableHighlight> : <Text style={styles.leftNavButtonText}>{'  '}</Text>}
                 <View  style={styles.titleView}>
                   <Text style={styles.title}>{currentView.name}</Text>
                 </View>
@@ -100,7 +100,7 @@ export default class EscapESXI extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(29, 97, 179)',
+    backgroundColor: '#455A64',
     flexDirection:'column',
   },
   componentContainer: {
@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
     alignItems:'center',
     alignSelf:'center',
     width: '100%',
-    paddingBottom: 2,
+    paddingTop: 20,
     zIndex: 100,
-    backgroundColor: 'rgb(128,128,128)',
+    backgroundColor: '#607D8B',
     shadowColor: '#000000',
     shadowOffset: {
       width: 1,

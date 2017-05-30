@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   vmSelectionBtn: {
-    backgroundColor:'#1E90FF',
+    backgroundColor:'#009688',
     width: '100%',
     height:50,
   },

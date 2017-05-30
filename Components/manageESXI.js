@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonBg:{
-    backgroundColor:'rgb(0,181,80)',
+    backgroundColor:'#009688',
     margin:20,
     width: "90%",
     height: "5%",
