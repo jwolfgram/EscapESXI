@@ -104,11 +104,8 @@ const styles = StyleSheet.create({
     flexDirection:'column',
   },
   componentContainer: {
-    position: 'absolute',
-    top: 60,
-    left: 0,
-    right: 0,
-    bottom: 0
+    flex: 1,
+    zIndex: -10,
   },
   navbarView: {
     flexDirection:'row',
@@ -118,7 +115,6 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     width: '100%',
     paddingTop: 20,
-    zIndex: 100,
     backgroundColor: '#607D8B',
     shadowColor: '#000000',
     shadowOffset: {
