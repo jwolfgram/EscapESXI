@@ -1,7 +1,14 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet,  TouchableHighlight, ScrollView, Image } from 'react-native';
-import SSH from 'react-native-ssh';
-import Spinner from 'react-native-loading-spinner-overlay';
+import React, { Component } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableHighlight,
+  ScrollView,
+  Image
+} from "react-native";
+import SSH from "react-native-ssh";
+import Spinner from "react-native-loading-spinner-overlay";
 
 export default class ManageVM extends Component {
   constructor(props) {
@@ -16,123 +23,177 @@ export default class ManageVM extends Component {
   }
 
   componentWillMount() {
-    this.setState({poweredOn: null, status: "Getting VM Status..."}, () => {
-      this.getPowerState()
-      this.getVMScreenShot()
-    })
-
+    this.setState({ poweredOn: null, status: "Getting VM Status..." }, () => {
+      this.getPowerState();
+      this.getVMScreenShot();
+    });
   }
 
   getPowerState() {
-    this.setState({poweredOn: null, status: "Getting VM Status..."});
-    SSH.execute(this.props.sshConfig, ' vim-cmd vmsvc/power.getstate ' + this.props.vmSessionID).then((result) =>{
-        if (result[1] == "Powered off") {
-          this.setState({poweredOn: false})
-        } else {
-          if (result[1] == "Powered on") {
-            this.setState({poweredOn: true})
-          }
+    this.setState({ poweredOn: null, status: "Getting VM Status..." });
+    SSH.execute(
+      this.props.sshConfig,
+      " vim-cmd vmsvc/power.getstate " + this.props.vmSessionID
+    ).then(result => {
+      if (result[1] == "Powered off") {
+        this.setState({ poweredOn: false });
+      } else {
+        if (result[1] == "Powered on") {
+          this.setState({ poweredOn: true });
         }
-    })
-    SSH.execute(this.props.sshConfig, 'esxcli vm process list').then((result) =>{
-        for (let i = 0; i < result.length; i+=8) {
-          if (this.props.vmName == result[i]) {
-            this.setState({worldID: result[i + 1].substr(result[i + 1].indexOf(":") + 1)})
-          }
+      }
+    });
+    SSH.execute(this.props.sshConfig, "esxcli vm process list").then(result => {
+      for (let i = 0; i < result.length; i += 8) {
+        if (this.props.vmName == result[i]) {
+          this.setState({
+            worldID: result[i + 1].substr(result[i + 1].indexOf(":") + 1)
+          });
         }
-    })
-    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/get.guest ' + this.props.vmSessionID).then((result) =>{
-      let ipAddressArr = []
+      }
+    });
+    SSH.execute(
+      this.props.sshConfig,
+      "vim-cmd vmsvc/get.guest " + this.props.vmSessionID
+    ).then(result => {
+      let ipAddressArr = [];
       for (let i = 0; i < result.length; i++) {
         if (result[i].includes('ipAddress = "')) {
           let ipAddress = result[i].split('"')[1];
-          ipAddressArr.push(<Text key={i}>{ipAddress}</Text>)
+          ipAddressArr.push(<Text key={i}>{ipAddress}</Text>);
         }
       }
-      this.setState({ipAddressEl: <View style={styles.card}>{ipAddressArr}</View>})
-    })
+      this.setState({
+        ipAddressEl: <View style={styles.card}>{ipAddressArr}</View>
+      });
+    });
   }
 
   powerOffVM(vmSessionID) {
-    this.setState({poweredOn: null, status: "Sending Power Off..."});
-    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/power.off ' + vmSessionID).then(
-      result => this.setState({poweredOn: false}),
-      error =>  console.log('Error:', error)
+    this.setState({ poweredOn: null, status: "Sending Power Off..." });
+    SSH.execute(
+      this.props.sshConfig,
+      "vim-cmd vmsvc/power.off " + vmSessionID
+    ).then(
+      result => this.setState({ poweredOn: false }),
+      error => console.log("Error:", error)
     );
   }
 
   softPowerOffVM(vmSessionID) {
-    console.log('vim-cmd vmsvc/power.shutdown ' + vmSessionID)
-    this.setState({poweredOn: null, status: "Sending Soft Power Off..."});
-    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/power.shutdown ' + vmSessionID).then(
-      result => this.setState({poweredOn: true}),
-      error =>  console.log('Error:', error)
+    console.log("vim-cmd vmsvc/power.shutdown " + vmSessionID);
+    this.setState({ poweredOn: null, status: "Sending Soft Power Off..." });
+    SSH.execute(
+      this.props.sshConfig,
+      "vim-cmd vmsvc/power.shutdown " + vmSessionID
+    ).then(
+      result => this.setState({ poweredOn: true }),
+      error => console.log("Error:", error)
     );
   }
 
   powerOnVM(vmSessionID) {
-    this.setState({poweredOn: null, status: "Sending Power On..."});
-    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/power.on ' + vmSessionID).then(
-      result => this.setState({poweredOn: true}),
-      error =>  console.log('Error:', error)
+    this.setState({ poweredOn: null, status: "Sending Power On..." });
+    SSH.execute(
+      this.props.sshConfig,
+      "vim-cmd vmsvc/power.on " + vmSessionID
+    ).then(
+      result => this.setState({ poweredOn: true }),
+      error => console.log("Error:", error)
     );
   }
 
   getVMScreenShot() {
-    fetch('https://root:pinetree@192.168.3.2/screen?id=33').then((response) => {
-      return response.blob();
-    }).then((jsonData) => {
-      console.log('data:image/png;base64,' + btoa(jsonData));
-      this.setState({vmScreenShotData: 'data:image/png;base64,' + btoa(jsonData)});
-    })
+    fetch("https://root:pinetree@192.168.3.2/screen?id=33")
+      .then(response => {
+        return response.blob();
+      })
+      .then(jsonData => {
+        console.log("data:image/png;base64," + btoa(jsonData));
+        this.setState({
+          vmScreenShotData: "data:image/png;base64," + btoa(jsonData)
+        });
+      });
   }
 
   suspendVM(vmSessionID) {
-    this.setState({poweredOn: null, status: "Sending Suspend Signal..."});
-    SSH.execute(this.props.sshConfig, 'vim-cmd vmsvc/power.suspend ' + vmSessionID).then(
-      result => this.setState({poweredOn: true}),
-      error =>  console.log('Error:', error)
+    this.setState({ poweredOn: null, status: "Sending Suspend Signal..." });
+    SSH.execute(
+      this.props.sshConfig,
+      "vim-cmd vmsvc/power.suspend " + vmSessionID
+    ).then(
+      result => this.setState({ poweredOn: true }),
+      error => console.log("Error:", error)
     );
   }
 
   powerStateOptions() {
     if (this.state.poweredOn == null) {
-      return (<View style={{flex: 1,justifyContent: 'center',alignItems: 'center',}}>
-                <Spinner visible={true} textContent={this.state.status}/>
-              </View>)
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Spinner visible={true} textContent={this.state.status} />
+        </View>
+      );
     } else {
       if (this.state.poweredOn == false) {
         return (
-          <View style={styles.actionsView}>
-            <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.powerOnVM(this.props.vmSessionID)}>
-              <Text style={styles.buttonText}>Power On</Text>
-            </TouchableHighlight>
-            <TouchableHighlight style={styles.vmSelectionBtn} onPress={() => this.getPowerState()}>
-              <Text style={styles.buttonText}>Refresh VM's Status</Text>
-            </TouchableHighlight>
+          <View style={{ padding: 10 }}>
+            <View style={[styles.card, styles.actionsView, { height: 200 }]}>
+              <Text style={styles.cardTitle}>VM Options</Text>
+              <View style={styles.hr} />
+              <TouchableHighlight
+                style={[styles.btn, styles.vmSelectionBtn]}
+                onPress={() => this.powerOnVM(this.props.vmSessionID)}
+              >
+                <Text style={styles.buttonText}>Power On</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={[styles.btn, styles.vmSelectionBtn]}
+                onPress={() => this.getPowerState()}
+              >
+                <Text style={styles.buttonText}>Refresh VM's Status</Text>
+              </TouchableHighlight>
+            </View>
           </View>
-        )
+        );
       } else {
         if (this.state.poweredOn == true) {
-          return (<ScrollView style={styles.scrollView}>
-                    <View style={[styles.card, styles.actionsView]}>
-                      <Text style={styles.cardTitle}>VM Options</Text>
-                      <View style={styles.hr}/>
-                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.softPowerOffVM(this.props.vmSessionID)}>
-                        <Text style={styles.buttonText}>Soft Power Off</Text>
-                      </TouchableHighlight>
-                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.powerOffVM(this.props.vmSessionID)}>
-                        <Text style={styles.buttonText}>Force Power Off</Text>
-                      </TouchableHighlight>
-                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.suspendVM(this.props.vmSessionID)}>
-                        <Text style={styles.buttonText}>Suspend VM</Text>
-                      </TouchableHighlight>
-                      <TouchableHighlight style={[styles.btn, styles.vmSelectionBtn]} onPress={() => this.getPowerState()}>
-                        <Text style={styles.buttonText}>Refresh VM's Status</Text>
-                      </TouchableHighlight>
-                    </View>
-                    {this.state.ipAddressEl || <View style={styles.card}><Text>Loading...</Text></View>}
-                  </ScrollView>)
+          return (
+            <ScrollView style={styles.scrollView}>
+              <View style={[styles.card, styles.actionsView]}>
+                <Text style={styles.cardTitle}>VM Options</Text>
+                <View style={styles.hr} />
+                <TouchableHighlight
+                  style={[styles.btn, styles.vmSelectionBtn]}
+                  onPress={() => this.softPowerOffVM(this.props.vmSessionID)}
+                >
+                  <Text style={styles.buttonText}>Soft Power Off</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={[styles.btn, styles.vmSelectionBtn]}
+                  onPress={() => this.powerOffVM(this.props.vmSessionID)}
+                >
+                  <Text style={styles.buttonText}>Force Power Off</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={[styles.btn, styles.vmSelectionBtn]}
+                  onPress={() => this.suspendVM(this.props.vmSessionID)}
+                >
+                  <Text style={styles.buttonText}>Suspend VM</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={[styles.btn, styles.vmSelectionBtn]}
+                  onPress={() => this.getPowerState()}
+                >
+                  <Text style={styles.buttonText}>Refresh VM's Status</Text>
+                </TouchableHighlight>
+              </View>
+              {this.state.ipAddressEl ||
+                <View style={styles.card}><Text>Loading...</Text></View>}
+            </ScrollView>
+          );
         }
       }
     }
@@ -142,20 +203,18 @@ export default class ManageVM extends Component {
     return (
       <View style={styles.Container}>
         {this.powerStateOptions()}
-        <View style={styles.vmDetailsView}>
-
-        </View>
+        <View style={styles.vmDetailsView} />
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
   },
   scrollView: {
     width: "100%",
@@ -164,83 +223,83 @@ const styles = StyleSheet.create({
   card: {
     padding: 8,
     margin: 5,
-    width: '100%',
-    backgroundColor: '#fff',
-    justifyContent:'space-around',
-    alignItems:'center',
-    alignSelf:'center',
+    width: "100%",
+    backgroundColor: "#fff",
+    justifyContent: "space-around",
+    alignItems: "center",
+    alignSelf: "center",
     borderRadius: 2,
-    shadowColor: '#000000',
+    shadowColor: "#000000",
     shadowOffset: {
       width: 1,
       height: 1
     },
     shadowRadius: 1,
-    shadowOpacity: .8
+    shadowOpacity: 0.8
   },
   hr: {
-    width: '100%',
-    borderTopColor: '#666',
+    width: "100%",
+    borderTopColor: "#666",
     borderTopWidth: 3,
-    marginBottom: 10,
+    marginBottom: 10
   },
   btn: {
     padding: 3,
     margin: 5,
-    justifyContent:'center',
-    alignItems:'center',
-    alignSelf:'center',
-    shadowColor: '#000000',
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    shadowColor: "#000000",
     shadowOffset: {
       width: 1,
       height: 1
     },
     shadowRadius: 1,
-    shadowOpacity: .8
+    shadowOpacity: 0.8
   },
   actionsView: {
     margin: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center"
   },
   vmScreenShotView: {
-    flex: .5,
+    flex: 0.5,
     width: "90%",
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center"
   },
   vmDetailsView: {
-    flex: .5,
+    flex: 0.5,
     paddingBottom: 20,
     width: "90%",
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center"
   },
   buttonText: {
-    color: 'white',
+    color: "white"
   },
   cardTitle: {
-    width: '100%',
-    color: '#666',
+    width: "100%",
+    color: "#666",
     fontSize: 16,
     padding: 5,
-    fontWeight: 'bold',
+    fontWeight: "bold"
   },
   vmName: {
-    width: '60%',
-    color: 'white',
+    width: "60%",
+    color: "white"
   },
   whiteColorText: {
-    color: 'white',
+    color: "white"
   },
   vmSelectionBtn: {
-    backgroundColor:'#009688',
-    width: '100%',
-    height:50,
+    backgroundColor: "#009688",
+    width: "100%",
+    height: 50
   },
   title: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 24,
-    fontWeight: 'bold',
-  },
-})
+    fontWeight: "bold"
+  }
+});
