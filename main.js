@@ -135,19 +135,19 @@ const styles = StyleSheet.create({
   },
   componentContainer: {
     position: "absolute",
-    top: 60,
+    top: 80,
     left: 0,
     right: 0,
     bottom: 0
   },
   navbarView: {
     flexDirection: "row",
-    height: 60,
+    height: 80,
     justifyContent: "space-around",
     alignItems: "center",
     alignSelf: "center",
     width: "100%",
-    paddingTop: 20,
+    paddingTop: 30,
     zIndex: 100,
     backgroundColor: "#607D8B",
     shadowColor: "#000000",
