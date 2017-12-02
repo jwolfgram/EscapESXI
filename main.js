@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   componentContainer: {
     position: "absolute",
-    top: 80,
+    top: 60,
     left: 0,
     right: 0,
     bottom: 0
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     width: "100%",
-    paddingTop: 30,
+    paddingTop: 0,
     zIndex: 100,
     backgroundColor: "#607D8B",
     shadowColor: "#000000",
