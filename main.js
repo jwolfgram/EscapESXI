@@ -38,10 +38,7 @@ export default class EscapESXI extends Component {
 
     if (currentView && this.refs.current) {
       currentView.state = this.refs.current.state;
-      console.log(currentView);
     }
-
-    console.log(props);
 
     let pushThis = stateViews.concat({
       Component: view,
@@ -59,7 +56,6 @@ export default class EscapESXI extends Component {
 
   renderNavigator() {
     let currentView = this.state.views[this.state.views.length - 1];
-    console.log(currentView);
     return (
       <View style={styles.navbarView}>
         {this.state.views.length > 1
@@ -147,7 +143,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     width: "100%",
-    paddingTop: 0,
+    paddingTop: 20,
     zIndex: 100,
     backgroundColor: "#607D8B",
     shadowColor: "#000000",
